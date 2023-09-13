@@ -6,6 +6,8 @@ import PasswordManager.JsonController;
 import java.util.Scanner;
 
 public class CommandAddEntry extends Command {
+    // la classe permet d'ajouter une entrée dans la JsonArray
+
     private final JsonController jsc;
     private final Scanner userCommandScanner;
     private final EncryptionController ec;
@@ -20,7 +22,8 @@ public class CommandAddEntry extends Command {
     }
 
     @Override
-    public void exec() {
+    public boolean exec() {
+        // on récupère toutees les info nécéssaire pour complété l'entrée
         System.out.printf("name = ");
         String tmpName = this.userCommandScanner.nextLine();
         System.out.printf("user name = ");
@@ -29,7 +32,10 @@ public class CommandAddEntry extends Command {
         String tmpSite = this.userCommandScanner.nextLine();
         System.out.printf("password = ");
         String tmpPassword = this.userCommandScanner.nextLine();
-        tmpPassword = ec.encrypt(tmpPassword);
+        // on chiffre le mot de passe.
+        tmpPassword = this.ec.encrypt(tmpPassword);
+        // on enregistre l'entrée dans la JsonArray
         this.jsc.addDatasInJsonBuffer(tmpName, tmpSite, tmpUserName, tmpPassword);
+        return true;
     }
 }

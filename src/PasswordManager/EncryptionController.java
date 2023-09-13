@@ -8,13 +8,16 @@ import java.util.Arrays;
 import java.util.Base64;
 
 public class EncryptionController {
+    // la calsse sert à chiffrer et déchffrer une chaîne de charactère
     private static final String ALGORITHM = "AES";
+    // on utilise le masterPassword comme clé principale de chiffrage.
     private final String masterPassword;
     public EncryptionController(String masterPassword){
         this.masterPassword = masterPassword;
     }
 
     public String encrypt(String str){
+        // chiffrage de str
         try {
             SecretKeySpec keyspec = generateKey(this.masterPassword);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
@@ -31,6 +34,7 @@ public class EncryptionController {
     }
 
     public String decrypt(String str){
+        // déchiffrage de str
         try {
             SecretKeySpec keySpec = generateKey(this.masterPassword);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
@@ -48,6 +52,7 @@ public class EncryptionController {
 
     private SecretKeySpec generateKey(String password)
     {
+        //on génère une clé de chifrfage à partir de password
         try{
             byte[] key = (password).getBytes(StandardCharsets.UTF_8);
             MessageDigest sha = MessageDigest.getInstance("SHA-1");

@@ -5,6 +5,9 @@ import java.nio.file.*;
 import static java.lang.System.out;
 
 public class FilesController {
+    // classe servant à gérer les fichiers ouverture / manipulation / fermeture etc...
+
+    // fileName sera le fichier cible
     private final String fileName;
     private final Path file;
     private final InputStream in;
@@ -17,6 +20,7 @@ public class FilesController {
     }
 
     public void writeInFile(String content) {
+        // on écrit dans le fichier le contenu de content
         Writer wt = null;
 
         try {
@@ -36,6 +40,7 @@ public class FilesController {
     }
 
     public String getFileContent() {
+        // on retourne le contenu du fichier lu
         BufferedReader reader = new BufferedReader(new InputStreamReader(this.in));
         String stringBuffer = null;
 
@@ -67,19 +72,23 @@ public class FilesController {
 
 
     private InputStream openFile() {
+        // on tente d'ovrir le fichier
         InputStream in;
 
         try {
             in = Files.newInputStream(this.file);
         } catch (IOException e) {
             System.err.println(e);
+            //si le fichier n'a pas pue être ouvert on le créer
             createNewFile(this.fileName);
+            // et retente d'ouvrir le fichier nouvellement créer
             return openFile();
         }
         return in;
     }
 
     private void createNewFile(String name) {
+        // on créer le fichier demander
         FileOutputStream out = null;
 
         try {
