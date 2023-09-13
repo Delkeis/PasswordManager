@@ -1,7 +1,7 @@
 package Commands;
 
-import PasswordManager.EncryptionController;
-import PasswordManager.JsonController;
+import Controllers.EncryptionController;
+import Controllers.JsonController;
 
 import java.util.Scanner;
 
@@ -43,12 +43,17 @@ public class CommandSearch extends Command{
                 System.out.println(jsonController.getDataFromKey(this.userCommandScanner.nextLine().trim().toLowerCase(), "site", encryptionController));
                 break;
             case "back":
-                break;
+                return true;
             default:
-                // TODO faire en sorte de ne pas faire de récursivité pour évité la surcharge
-                this.exec();
-                break;
+                return false;
         }
         return true;
+    }
+
+    @Override
+    public void onFailed(){
+        System.out.println("type BACK to get back to menu");
+        if (!this.exec())
+            this.onFailed();
     }
 }

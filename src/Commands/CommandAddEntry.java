@@ -1,7 +1,7 @@
 package Commands;
 
-import PasswordManager.EncryptionController;
-import PasswordManager.JsonController;
+import Controllers.EncryptionController;
+import Controllers.JsonController;
 
 import java.util.Scanner;
 

@@ -1,12 +1,12 @@
 package Commands;
 
-import PasswordManager.JsonController;
+import Controllers.JsonController;
 
 public class CommandList extends Command {
     // Commande pour affiché le contenue de la JsonArray
     // TODO : la commande est la pour le dévelopement et est vouée à disparaître
 
-    private final JsonController jsonController;
+    private JsonController jsonController;
     public CommandList(JsonController jsonController){
         super();
         this.jsonController = jsonController;

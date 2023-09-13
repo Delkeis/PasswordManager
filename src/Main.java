@@ -2,9 +2,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import Commands.*;
-import PasswordManager.EncryptionController;
-import PasswordManager.FilesController;
-import PasswordManager.JsonController;
+import Exceptions.EmptyFileException;
+import Controllers.EncryptionController;
+import Controllers.FilesController;
+import Controllers.JsonController;
 
 public class Main {
 
@@ -12,7 +13,7 @@ public class Main {
 
         // initialisation de la classe FileController qui contient les méthodes
         // pour récupérer et manipuler les fichiers.
-        FilesController filesController = new FilesController("./data.json");
+        FilesController fileController = new FilesController("./data.json");
         // JsonController permet de manipulé la matière json
         JsonController jsonController = new JsonController();
         Scanner userCommandScanner = new Scanner(System.in);
@@ -20,18 +21,19 @@ public class Main {
         // Encryption Controller me permet de chiffrer et déchiffrer de chaîne de charactères
         EncryptionController encryptionController = new EncryptionController(userCommandScanner.nextLine());
 
-        boolean stop = false;
+        Boolean stop = false;
         String userCommand;
 
         try{
             // on transcrit le contenu de fileController.fileName en format Json
-            jsonController.getContentFromString(filesController.getFileContent());
-        } catch (Exception e){ // TODO : une exeption personalisé pour bien catch le fait que le contenue du fichier soit vide
+            String tmpString = fileController.getFileContent();
+            jsonController.getContentFromString(tmpString);
+        } catch (EmptyFileException e){
             System.out.println("Fichier Vide");
             //Si aucun fichier n'est présent on créer une entrée avec des paramètres techniques
             jsonController.addDatasInJsonBuffer("MyPasswordManager", "delkeis.fr", "passwordChecker", encryptionController.encrypt("azerty"));
             // on écrit dans le fichier fileController.fileName
-            filesController.writeInFile(jsonController.getStringFromJsonObject());
+            fileController.writeInFile(jsonController.getStringFromJsonObject());
         } finally {
             // on vérifie que le mot de passe à bien correctement déchffrer le contenue de l'entrée technique
             if (!jsonController.getPasswordDataFromKey("MyPasswordManager", "name", encryptionController).equals("azerty")) {
@@ -44,11 +46,10 @@ public class Main {
 
         // On créer une liste de Command : classe parent pour toutes les commandes du prompt
         List<Command> commands = new ArrayList<>();
-        commandIndexing(commands, jsonController, filesController, userCommandScanner, encryptionController);
+        commandIndexing(commands, jsonController, fileController, userCommandScanner, encryptionController);
 
         // boucle pricipale du prompt
         while (!stop){
-
             System.out.print(" -> ");
             // récupération de l'entrée utilisateur
             userCommand = userCommandScanner.nextLine().trim().toLowerCase();
@@ -56,6 +57,8 @@ public class Main {
             // switch sur les commandes basic et puis sur la liste
             switch (userCommand.toLowerCase()){
                 case "exit":
+                case "stop":
+                    getCommandFromString(commands, "exit").exec();
                     stop = true;
                     break;
                 case "help":
@@ -63,36 +66,45 @@ public class Main {
                     helper(commands);
                     break;
                 default:
-                    boolean checkExec = false;
+                    Command c = null;
                     // on parcours toutes les commandes dans la liste pour trouver la bonne
-                    for (Command c: commands){
-                        if (c.getName().equals(userCommand.toLowerCase()))
-                            // TODO : par défault exec() retourne toujours vrais, faire en sorte qu'il retourne faux en cas de problème
-                            checkExec = c.exec();
+                    c = getCommandFromString(commands, userCommand.toLowerCase());
+                    if  (c != null){
+                        if (!c.exec())
+                            c.onFailed();
                     }
-                    if (!checkExec)
-                        // aucune commande trouvé.
+                    else // aucune commande trouvé.
                         System.out.println("Wrong Command you can type -> help");
                     break;
             }
         }
-        filesController.close();
+        fileController.close();
     }
 
-    private static void commandIndexing(List<Command> commands, JsonController jsc, FilesController fc, Scanner userCommandScanner, EncryptionController ec){
+    private static Command getCommandFromString(List<Command> commands, String commandName){
+        for (Command c: commands){
+            if (c.getName().equals(commandName))
+                // TODO : par défault exec() retourne toujours vrais, faire en sorte qu'il retourne faux en cas de problème
+                return c;
+        }
+        return null;
+    }
+
+    private static void commandIndexing(List<Command> commands, JsonController jsonController, FilesController filesController,
+                                        Scanner userCommandScanner, EncryptionController encryptionController){
         // chaque nouvelle commande doit être ajouté ici à la liste initialisé uniquement par son contructeur.
-        commands.add(new CommandList(jsc));
-        commands.add(new CommandSave(fc, jsc));
-        commands.add(new CommandAddEntry(jsc, userCommandScanner, ec));
-        commands.add(new CommandRemove(jsc));
-        commands.add(new CommandSearch(userCommandScanner, jsc, ec));
+        commands.add(new CommandExit(filesController, jsonController));
+        commands.add(new CommandList(jsonController));
+        commands.add(new CommandSave(filesController, jsonController));
+        commands.add(new CommandAddEntry(jsonController, userCommandScanner, encryptionController));
+        commands.add(new CommandRemove(jsonController, userCommandScanner, encryptionController));
+        commands.add(new CommandSearch(userCommandScanner, jsonController, encryptionController));
     }
 
     public static void helper(List<Command> cmdList){
         // on liste toutes les commandes qui existe pour l'imprimer à l'utilisateur.
         String helpString = "type :\n" +
-                "help -> command for other command informations\n" +
-                "exit -> command t o stop the program\n";
+                "help -> command for other command informations\n";
         for (Command c:cmdList) {
             helpString += c.helpString() + "\n";
         }

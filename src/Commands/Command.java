@@ -14,4 +14,5 @@ public abstract class Command {
     public abstract boolean exec();
     public String getName(){return this.name;}
 
+    public void onFailed(){System.out.println("Erreur avec la commande : "+this.name);}
 }

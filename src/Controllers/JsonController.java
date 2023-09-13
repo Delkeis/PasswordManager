@@ -1,4 +1,4 @@
-package PasswordManager;
+package Controllers;
 
 import org.json.*;
 
@@ -44,10 +44,8 @@ public class JsonController {
 
     public boolean removeDataFromJsonBuffer(int id)
     {
-        // on delete la drenière entrée de la JsonArray
-        // TODO : faire en sorte de pouvoir choisir l'entrée à supprimé
         try{
-           this.jsonArray.remove(id - 1);
+           this.jsonArray.remove(id);
            return true;
         } catch (Exception e){
             e.printStackTrace();
@@ -90,17 +88,17 @@ public class JsonController {
     public String getPasswordDataFromKey(String name, String key, EncryptionController encryptionController){
         // on récupère le mot de passe deupuis la clé
         List<Integer> idList = getIdFromKey(name, key);
-        return encryptionController.decrypt(this.jsonArray.getJSONObject(idList.get(0)).getString("password"));
+        return encryptionController.decrypt(this.jsonArray.getJSONObject(idList.get(0) - 1).getString("password"));
     }
 
-    private List<Integer> getIdFromKey(String name, String key){
+    public List<Integer> getIdFromKey(String name, String key){
         // on cherche les id qui correspondes à la clé
         List<Integer> idList = new ArrayList<>();
 
         for (int i = 0; i <= this.jsonArray.length() - 1; i++){
             JSONObject jsobj = jsonArray.getJSONObject(i);
             if (jsobj.getString(key).equalsIgnoreCase(name))
-                idList.add(Integer.parseInt(jsobj.getString("id")) - 1);
+                idList.add(Integer.parseInt(jsobj.getString("id")));
         }
         return idList;
     }

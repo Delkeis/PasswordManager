@@ -1,7 +1,7 @@
 package Commands;
 
-import PasswordManager.FilesController;
-import PasswordManager.JsonController;
+import Controllers.FilesController;
+import Controllers.JsonController;
 public class CommandSave extends Command {
     // commande pour enregistrer la JsonArray dans le fichier fileController.filename
     private final FilesController fileController;

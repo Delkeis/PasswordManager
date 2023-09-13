@@ -1,5 +1,6 @@
-package PasswordManager;
+package Controllers;
 
+import Exceptions.*;
 import java.io.*;
 import java.nio.file.*;
 import static java.lang.System.out;
@@ -10,7 +11,7 @@ public class FilesController {
     // fileName sera le fichier cible
     private final String fileName;
     private final Path file;
-    private final InputStream in;
+    private InputStream in = null;
 
 
     public FilesController(String fileName) {
@@ -39,7 +40,7 @@ public class FilesController {
         }
     }
 
-    public String getFileContent() {
+    public String getFileContent() throws EmptyFileException {
         // on retourne le contenu du fichier lu
         BufferedReader reader = new BufferedReader(new InputStreamReader(this.in));
         String stringBuffer = null;
@@ -52,8 +53,10 @@ public class FilesController {
                 else
                     stringBuffer = stringBuffer + str;
             }
+            if (str == null && stringBuffer == null)
+                throw new EmptyFileException("The file is empty");
         } catch (IOException e) {
-            out.printf("eol");
+            throw new EmptyFileException("The file is empty");
         }
 
         try {
@@ -67,7 +70,11 @@ public class FilesController {
 
     @SuppressWarnings("unused")
     public void printFileContent() {
-        out.println(this.getFileContent());
+        try {
+            out.println(this.getFileContent());
+        } catch (EmptyFileException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
