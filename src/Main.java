@@ -16,7 +16,7 @@ public class Main {
         // JsonController permet de manipulé la matière json
         JsonController jsonController = new JsonController();
         Scanner userCommandScanner = new Scanner(System.in);
-        System.out.printf("Master Password : ");
+        System.out.print("Master Password : ");
         // Encryption Controller me permet de chiffrer et déchiffrer de chaîne de charactères
         EncryptionController encryptionController = new EncryptionController(userCommandScanner.nextLine());
 
@@ -49,10 +49,9 @@ public class Main {
         // boucle pricipale du prompt
         while (!stop){
 
-            System.out.printf(" -> ");
+            System.out.print(" -> ");
             // récupération de l'entrée utilisateur
-            userCommand = userCommandScanner.nextLine().split(" ")[0];
-
+            userCommand = userCommandScanner.nextLine().trim().toLowerCase();
 
             // switch sur les commandes basic et puis sur la liste
             switch (userCommand.toLowerCase()){

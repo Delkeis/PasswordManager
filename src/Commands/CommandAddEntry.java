@@ -8,15 +8,15 @@ import java.util.Scanner;
 public class CommandAddEntry extends Command {
     // la classe permet d'ajouter une entrée dans la JsonArray
 
-    private final JsonController jsc;
+    private final JsonController jsonController;
     private final Scanner userCommandScanner;
-    private final EncryptionController ec;
+    private final EncryptionController encryptionController;
 
-    public CommandAddEntry(JsonController jsc, Scanner userCommandScanner, EncryptionController ec){
+    public CommandAddEntry(JsonController jsonController, Scanner userCommandScanner, EncryptionController encryptionController){
         super();
-        this.jsc = jsc;
+        this.jsonController = jsonController;
         this.userCommandScanner = userCommandScanner;
-        this.ec = ec;
+        this.encryptionController = encryptionController;
         this.name = "addentry";
         this.desc = "command that permit to add an entry with name / site / password";
     }
@@ -33,9 +33,9 @@ public class CommandAddEntry extends Command {
         System.out.printf("password = ");
         String tmpPassword = this.userCommandScanner.nextLine();
         // on chiffre le mot de passe.
-        tmpPassword = this.ec.encrypt(tmpPassword);
+        tmpPassword = this.encryptionController.encrypt(tmpPassword);
         // on enregistre l'entrée dans la JsonArray
-        this.jsc.addDatasInJsonBuffer(tmpName, tmpSite, tmpUserName, tmpPassword);
+        this.jsonController.addDatasInJsonBuffer(tmpName, tmpSite, tmpUserName, tmpPassword);
         return true;
     }
 }
