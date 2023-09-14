@@ -23,16 +23,27 @@ public class CommandRemove extends Command{
 
     private void deleteAll(String key){
         String content;
+        String result;
+
 
         System.out.print("the "+key+" : ");
         content = this.userCommandScanner.nextLine().trim().toLowerCase();
-        System.out.print("Do you want to delete all of there entry ? : \n" +
-                this.jsonController.getDataFromKey(content, "name", this.encryptionController)+
-                "\n(Y/N) :");
-        if (this.userCommandScanner.nextLine().trim().toLowerCase().equals("y")){
+        result = this.jsonController.getDataFromKey(content, "name", this.encryptionController);
+
+        if (result.equals(""))
+        {
+            System.out.println(key + " : " + content + " not Found");
+            return;
+        }
+
+        System.out.print("Do you want to delete all of there entry ? : \n" + result + "\n(Y/N) :");
+        if (this.userCommandScanner.nextLine().trim().equalsIgnoreCase("y")){
             List<Integer> intlist =  this.jsonController.getIdFromKey(content, "name");
-            for (int index: intlist){
-                this.jsonController.removeDataFromJsonBuffer(index);
+            for (int id: intlist){
+                if (id != 1) // protection de l'entrée technique
+                    this.jsonController.removeDataFromJsonBuffer(id);
+                else
+                    System.out.println("Impossible de suprimmer cet entrée !");
             }
         }
     }

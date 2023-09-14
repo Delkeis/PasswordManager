@@ -18,9 +18,20 @@ public class JsonController {
     }
 
 
+    public int getFirstUnusedId() {
+        // on cherche la première id non attribué
+        int res = 1;
+
+        // si getPositionFromId() retourne -1 cela veut dire que nous ne trouvons pas
+        // l'identifiant dans la liste
+        while (getPositionFromId(res) != -1)
+            res++;
+        return res;
+    }
+
+    @Deprecated
     public int getLastId(){
         // on récupère l'id de la dernière occurence d'objet json
-        //TODO : faire en sorte de récupérer le premier id disponible à la place
         if (this.jsonArray.length() <= 0)
             return 0;
         JSONObject jsonObject = jsonArray.getJSONObject(jsonArray.length() - 1);
@@ -29,8 +40,7 @@ public class JsonController {
     public void addDatasInJsonBuffer(String name, String site, String userName, String password){
         // on ajoute les arguments en entrées pour composer un nouvel object Json
         // pour ensuite l'ajouter à la JsonArray
-        int id = getLastId();
-        id++;
+        int id = getFirstUnusedId();
 
         Map<String, String> map = new HashMap<>();
         map.put("id", ""+id);
@@ -45,8 +55,12 @@ public class JsonController {
     public boolean removeDataFromJsonBuffer(int id)
     {
         try{
-           this.jsonArray.remove(id);
-           return true;
+            int position = getPositionFromId(id);
+            if (position != -1)
+                this.jsonArray.remove(position);
+            else
+                return false;
+            return true;
         } catch (Exception e){
             e.printStackTrace();
         } finally {
@@ -72,7 +86,17 @@ public class JsonController {
         String data = "";
 
         for (int id: idList){
-            JSONObject jsonObject = this.jsonArray.getJSONObject(id);
+            // on parcours tous les id trouver pour les proposer à la supression.
+            JSONObject jsonObject = null;
+
+            // on recherche le bon ID dans la listes des objects
+            int position = getPositionFromId(id);
+            if (position != -1)
+                jsonObject = this.jsonArray.getJSONObject(position);
+            else
+                return "";
+            if (jsonObject == null)
+                return "";
             data += "name : \u001B[32m" + jsonObject.getString("name") + "\u001B[0m\n" +
                     "user name : \u001B[32m" + jsonObject.getString("user_name") + "\u001B[0m\n" +
                     "site : \u001B[32m" + jsonObject.getString("site") + "\u001B[0m\n" +
@@ -82,7 +106,7 @@ public class JsonController {
         if (!data.equals(""))
             return data;
         else
-            return key + " not found";
+            return "";
     }
 
     public String getPasswordDataFromKey(String name, String key, EncryptionController encryptionController){
@@ -101,5 +125,14 @@ public class JsonController {
                 idList.add(Integer.parseInt(jsobj.getString("id")));
         }
         return idList;
+    }
+
+    private int getPositionFromId(int id){
+        // on recherche le bon ID dans la listes des objects
+        for (int i = 0; i < this.jsonArray.length(); i++){
+            if (this.jsonArray.getJSONObject(i).getString("id").equals(String.valueOf(id)))
+                return i;
+        }
+        return -1;
     }
 }
