@@ -3,10 +3,10 @@ package Commands;
 import Controllers.JsonController;
 
 public class CommandList extends Command {
-    // Commande pour affiché le contenue de la JsonArray
+    // Commande pour afficher le contenue de la JsonArray
     // TODO : la commande est la pour le dévelopement et est vouée à disparaître
 
-    private JsonController jsonController;
+    private final JsonController jsonController;
     public CommandList(JsonController jsonController){
         super();
         this.jsonController = jsonController;

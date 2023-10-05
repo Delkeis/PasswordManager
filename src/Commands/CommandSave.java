@@ -12,7 +12,7 @@ public class CommandSave extends Command {
         this.fileController = fileController;
         this.jsonController = jsonController;
         this.name = "save";
-        this.desc = "command that save all datas in files";
+        this.desc = "command that save all data's in files";
     }
     @Override
     public boolean exec() {

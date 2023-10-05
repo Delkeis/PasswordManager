@@ -17,20 +17,20 @@ public class CommandAddEntry extends Command {
         this.jsonController = jsonController;
         this.userCommandScanner = userCommandScanner;
         this.encryptionController = encryptionController;
-        this.name = "addentry";
+        this.name = "add entry";
         this.desc = "command that permit to add an entry with name / site / password";
     }
 
     @Override
     public boolean exec() {
-        // on récupère toutees les info nécéssaire pour complété l'entrée
-        System.out.printf("name = ");
+        // on récupère toutes les info nécéssaires pour compléter l'entrée
+        System.out.print("name = ");
         String tmpName = this.userCommandScanner.nextLine();
-        System.out.printf("user name = ");
+        System.out.print("user name = ");
         String tmpUserName = this.userCommandScanner.nextLine();
-        System.out.printf("site = ");
+        System.out.print("site = ");
         String tmpSite = this.userCommandScanner.nextLine();
-        System.out.printf("password = ");
+        System.out.print("password = ");
         String tmpPassword = this.userCommandScanner.nextLine();
         // on chiffre le mot de passe.
         tmpPassword = this.encryptionController.encrypt(tmpPassword);

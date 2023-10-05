@@ -11,7 +11,7 @@ public class FilesController {
     // fileName sera le fichier cible
     private final String fileName;
     private final Path file;
-    private InputStream in = null;
+    private final InputStream in;
 
 
     public FilesController(String fileName) {
@@ -43,17 +43,17 @@ public class FilesController {
     public String getFileContent() throws EmptyFileException {
         // on retourne le contenu du fichier lu
         BufferedReader reader = new BufferedReader(new InputStreamReader(this.in));
-        String stringBuffer = null;
+        StringBuilder stringBuffer = null;
 
         try {
             String str;
             while ((str = reader.readLine()) != null) {
                 if (stringBuffer == null)
-                    stringBuffer = str;
+                    stringBuffer = new StringBuilder(str);
                 else
-                    stringBuffer = stringBuffer + str;
+                    stringBuffer.append(str);
             }
-            if (str == null && stringBuffer == null)
+            if (stringBuffer == null)
                 throw new EmptyFileException("The file is empty");
         } catch (IOException e) {
             throw new EmptyFileException("The file is empty");
@@ -65,7 +65,7 @@ public class FilesController {
             throw new RuntimeException(e);
         }
 
-        return stringBuffer;
+        return stringBuffer.toString();
     }
 
     @SuppressWarnings("unused")
@@ -79,7 +79,7 @@ public class FilesController {
 
 
     private InputStream openFile() {
-        // on tente d'ovrir le fichier
+        // on tente d'ouvrir le fichier
         InputStream in;
 
         try {
@@ -101,12 +101,9 @@ public class FilesController {
         try {
             out = new FileOutputStream(name);
             out.write(0);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {
-
             if(out != null) {
                 try {
                     out.close();

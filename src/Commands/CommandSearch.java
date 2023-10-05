@@ -6,7 +6,7 @@ import Controllers.JsonController;
 import java.util.Scanner;
 
 public class CommandSearch extends Command{
-    // Commande pour cherchez de la donnée parmis celles présentes dans la JsonArray
+    // Commande pour cherchez de la donnée parmi celles présentes dans la JsonArray
     private final JsonController jsonController;
     private final Scanner userCommandScanner;
     private final EncryptionController encryptionController;
@@ -22,7 +22,7 @@ public class CommandSearch extends Command{
 
     @Override
     public boolean exec() {
-        // on demande quel clé doit servir à faire la recherche
+        // on demande quel clé doit servire à faire la recherche
         System.out.print("do you want to search with : (name / user_name / site ) ?\n" +
                 "$> ");
         // on switch sur le choix de l'utilisateur

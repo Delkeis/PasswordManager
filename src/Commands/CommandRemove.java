@@ -9,8 +9,8 @@ import java.util.Scanner;
 public class CommandRemove extends Command{
     // Commande pour supprimé une entrée de la JsonArray
     private final JsonController jsonController;
-    private Scanner userCommandScanner;
-    private EncryptionController encryptionController;
+    private final Scanner userCommandScanner;
+    private final EncryptionController encryptionController;
 
     public CommandRemove(JsonController jsonController, Scanner userCommandScanner, EncryptionController encryptionController){
         super();
@@ -43,14 +43,14 @@ public class CommandRemove extends Command{
                 if (id != 1) // protection de l'entrée technique
                     this.jsonController.removeDataFromJsonBuffer(id);
                 else
-                    System.out.println("Impossible de suprimmer cet entrée !");
+                    System.out.println("Impossible to delete this entry !");
             }
         }
     }
 
     @Override
     public boolean exec() {
-        // on demande quel clé doit servir à faire la recherche
+        // on demande quel clé doit servire à faire la recherche
         System.out.print("do you want to search with : (name / user_name / site ) ?\n" +
                 "$> ");
         // on switch sur le choix de l'utilisateur

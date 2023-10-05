@@ -8,10 +8,10 @@ import java.util.Arrays;
 import java.util.Base64;
 
 public class EncryptionController {
-    // la calsse sert à chiffrer et déchffrer une chaîne de charactère
+    // la classe sert à chiffrer et déchiffrer une chaîne de charactères
     private static final String ALGORITHM = "AES";
     // on utilise le masterPassword comme clé principale de chiffrage.
-    private final String masterPassword;
+    private String masterPassword;
     public EncryptionController(String masterPassword){
         this.masterPassword = masterPassword;
     }
@@ -19,10 +19,10 @@ public class EncryptionController {
     public String encrypt(String str){
         // chiffrage de str
         try {
-            SecretKeySpec keyspec = generateKey(this.masterPassword);
+            SecretKeySpec keySpec = generateKey(this.masterPassword);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
 
-            cipher.init(cipher.ENCRYPT_MODE, keyspec);
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec);
 
             byte[] encryptedValue = cipher.doFinal(str.getBytes());
             return Base64.getEncoder().encodeToString(encryptedValue);
@@ -39,20 +39,20 @@ public class EncryptionController {
             SecretKeySpec keySpec = generateKey(this.masterPassword);
             Cipher cipher = Cipher.getInstance(ALGORITHM);
 
-            cipher.init(cipher.DECRYPT_MODE, keySpec);
+            cipher.init(Cipher.DECRYPT_MODE, keySpec);
             byte[] decodedValue = Base64.getDecoder().decode(str);
             byte[] decryptedValue = cipher.doFinal(decodedValue);
 
             return new String(decryptedValue);
         } catch (Exception e){
-            e.printStackTrace();
+            System.out.println("BAD PASSWORD");
         }
         return "";
     }
 
     private SecretKeySpec generateKey(String password)
     {
-        //on génère une clé de chifrfage à partir de password
+        //on génère une clé de chiffrage à partir de password
         try{
             byte[] key = (password).getBytes(StandardCharsets.UTF_8);
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
@@ -63,5 +63,13 @@ public class EncryptionController {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void setMasterPassword(String pass){
+        this.masterPassword = pass;
+    }
+
+    public String getMasterPassword(){
+        return this.masterPassword;
     }
 }

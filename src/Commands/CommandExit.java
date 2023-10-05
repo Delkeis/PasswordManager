@@ -4,8 +4,8 @@ import Controllers.FilesController;
 import Controllers.JsonController;
 
 public class CommandExit extends Command{
-    private FilesController fileController;
-    private JsonController jsonController;
+    private final FilesController fileController;
+    private final JsonController jsonController;
 
 
     public CommandExit(FilesController fileController, JsonController jsonController){
