@@ -1,11 +1,11 @@
-package Controllers;
+package Serices;
 
 import Exceptions.*;
 import java.io.*;
 import java.nio.file.*;
 import static java.lang.System.out;
 
-public class FilesController {
+public class FilesService {
     // classe servant à gérer les fichiers ouverture / manipulation / fermeture etc...
 
     // fileName sera le fichier cible
@@ -14,7 +14,7 @@ public class FilesController {
     private final InputStream in;
 
 
-    public FilesController(String fileName) {
+    public FilesService(String fileName) {
         this.fileName = fileName;
         this.file = FileSystems.getDefault().getPath(fileName);
         this.in = openFile();

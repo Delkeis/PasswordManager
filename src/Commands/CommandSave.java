@@ -1,22 +1,22 @@
 package Commands;
 
-import Controllers.FilesController;
-import Controllers.JsonController;
+import Serices.FilesService;
+import Serices.JsonService;
 public class CommandSave extends Command {
     // commande pour enregistrer la JsonArray dans le fichier fileController.filename
-    private final FilesController fileController;
-    private final JsonController jsonController;
+    private final FilesService fileController;
+    private final JsonService jsonService;
 
-    public CommandSave(FilesController fileController, JsonController jsonController)
+    public CommandSave(FilesService fileController, JsonService jsonService)
     {
         this.fileController = fileController;
-        this.jsonController = jsonController;
+        this.jsonService = jsonService;
         this.name = "save";
         this.desc = "command that save all data's in files";
     }
     @Override
     public boolean exec() {
-        this.fileController.writeInFile(this.jsonController.getStringFromJsonObject());
+        this.fileController.writeInFile(this.jsonService.getStringFromJsonObject());
         return true;
     }
 }

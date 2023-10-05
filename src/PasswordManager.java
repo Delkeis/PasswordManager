@@ -2,18 +2,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
-import Controllers.*;
+import Serices.*;
 import Exceptions.*;
 import Commands.*;
 
 public class PasswordManager {
     // initialisation de la classe FileController qui contient les méthodes
     // pour récupérer et manipulé les fichiers.
-    private FilesController fileController;
-    // JsonController permet de manipulé la matière json
-    private JsonController jsonController;
+    private FilesService fileController;
+    // JsonService permet de manipulé la matière json
+    private JsonService jsonService;
     private Scanner userCommandScanner;
-    private EncryptionController encryptionController;
+    private EncryptionService encryptionService;
     private List<Command> commands;
     private String userCommand;
     private boolean stop;
@@ -21,9 +21,9 @@ public class PasswordManager {
     public PasswordManager() {
         // initialisation de la classe FileController qui contient les méthodes
         // pour récupérer et manipulé les fichiers.
-        this.fileController = new FilesController("./data.json");
-        // JsonController permet de manipulé la matière json
-        this.jsonController = new JsonController();
+        this.fileController = new FilesService("./data.json");
+        // JsonService permet de manipulé la matière json
+        this.jsonService = new JsonService();
         this.userCommandScanner = new Scanner(System.in);
         this.commands = new ArrayList<>();
         this.stop = false;
@@ -32,21 +32,21 @@ public class PasswordManager {
     public void run(){
         System.out.print("Master Password : ");
         // Encryption Controller me permet de chiffrer et déchiffrer de chaîne de characters
-        this.encryptionController = new EncryptionController(this.userCommandScanner.nextLine());
+        this.encryptionService = new EncryptionService(this.userCommandScanner.nextLine());
 
         try{
             // on transcrit le contenue de fileController.fileName en format Json
             String tmpString = this.fileController.getFileContent();
-            this.jsonController.getContentFromString(tmpString);
+            this.jsonService.getContentFromString(tmpString);
         } catch (EmptyFileException e){
             System.out.println("Fichier Vide");
             //Si aucun fichier n'est présent on créer une entrée avec des paramètres techniques
-            this.jsonController.addDatasInJsonBuffer("MyPasswordManager", "delkeis.fr", "passwordChecker", this.encryptionController.encrypt("azerty"));
+            this.jsonService.addDatasInJsonBuffer("MyPasswordManager", "delkeis.fr", "passwordChecker", this.encryptionService.encrypt("azerty"));
             // on écrit dans le fichier fileController.fileName
-            this.fileController.writeInFile(this.jsonController.getStringFromJsonObject());
+            this.fileController.writeInFile(this.jsonService.getStringFromJsonObject());
         } finally {
             // on vérifie que le mot de passe à bien correctement déchiffrer le contenue de l'entrée technique
-            if (!this.jsonController.getPasswordDataFromKey("MyPasswordManager", "name", this.encryptionController).equals("azerty")) {
+            if (!this.jsonService.getPasswordDataFromKey("MyPasswordManager", "name", this.encryptionService).equals("azerty")) {
                 // si non on considère que le mot de passe n'est pas bon
                 System.out.println("BAD PASSWORD");
                 // fin PGM
@@ -55,7 +55,7 @@ public class PasswordManager {
         }
 
         // On créer une liste de Command : classe parent pour toutes les commandes du prompt
-        commandIndexing(this.commands, this.jsonController, this.fileController, this.userCommandScanner, this.encryptionController);
+        commandIndexing(this.commands, this.jsonService, this.fileController, this.userCommandScanner, this.encryptionService);
 
         // boucle pricipale du prompt
         while (!this.stop){
@@ -99,15 +99,15 @@ public class PasswordManager {
         return null;
     }
 
-    private static void commandIndexing(List<Command> commands, JsonController jsonController, FilesController filesController,
-                                        Scanner userCommandScanner, EncryptionController encryptionController){
+    private static void commandIndexing(List<Command> commands, JsonService jsonService, FilesService filesService,
+                                        Scanner userCommandScanner, EncryptionService encryptionService){
         // chaque nouvelle commande doit être ajouté ici à la liste initialisé uniquement par son contructeur.
-        commands.add(new CommandExit(filesController, jsonController));
-        commands.add(new CommandList(jsonController));
-        commands.add(new CommandSave(filesController, jsonController));
-        commands.add(new CommandAddEntry(jsonController, userCommandScanner, encryptionController));
-        commands.add(new CommandRemove(jsonController, userCommandScanner, encryptionController));
-        commands.add(new CommandSearch(userCommandScanner, jsonController, encryptionController));
+        commands.add(new CommandExit(filesService, jsonService));
+        commands.add(new CommandList(jsonService));
+        commands.add(new CommandSave(filesService, jsonService));
+        commands.add(new CommandAddEntry(jsonService, userCommandScanner, encryptionService));
+        commands.add(new CommandRemove(jsonService, userCommandScanner, encryptionService));
+        commands.add(new CommandSearch(userCommandScanner, jsonService, encryptionService));
     }
 
     public static void helper(List<Command> cmdList){

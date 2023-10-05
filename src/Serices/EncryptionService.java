@@ -1,4 +1,4 @@
-package Controllers;
+package Serices;
 
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
@@ -7,12 +7,12 @@ import java.security.MessageDigest;
 import java.util.Arrays;
 import java.util.Base64;
 
-public class EncryptionController {
+public class EncryptionService {
     // la classe sert à chiffrer et déchiffrer une chaîne de charactères
     private static final String ALGORITHM = "AES";
     // on utilise le masterPassword comme clé principale de chiffrage.
     private String masterPassword;
-    public EncryptionController(String masterPassword){
+    public EncryptionService(String masterPassword){
         this.masterPassword = masterPassword;
     }
 

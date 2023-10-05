@@ -1,4 +1,4 @@
-package Controllers;
+package Serices;
 
 import org.json.*;
 
@@ -7,13 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class JsonController {
+public class JsonService {
     // classe dédié à la gestion du Json Creation / ajout / suppression etc..
 
     private JSONArray jsonArray;
 
 
-    public JsonController(){
+    public JsonService(){
         this.jsonArray = new JSONArray();
     }
 
@@ -100,7 +100,7 @@ public class JsonController {
         }
         return str;
     }
-    public String getDataFromKey(String name, String key, EncryptionController encryptionController){
+    public String getDataFromKey(String name, String key, EncryptionService encryptionService){
         // on récupère un ou plusieurs object depuis la JsonArray grâce à une clé.
         List<Integer> idList = getIdFromKey(name, key);
         String separator = "========================";
@@ -121,7 +121,7 @@ public class JsonController {
             data.append("name : \u001B[32m").append(jsonObject.getString("name")).append("\u001B[0m\n")
                     .append("user name : \u001B[32m").append(jsonObject.getString("user_name")).append("\u001B[0m\n")
                     .append("site : \u001B[32m").append(jsonObject.getString("site")).append("\u001B[0m\n")
-                    .append("password : \u001B[32m").append(encryptionController.decrypt(jsonObject.getString("password"))).append("\u001B[0m\n")
+                    .append("password : \u001B[32m").append(encryptionService.decrypt(jsonObject.getString("password"))).append("\u001B[0m\n")
                     .append(separator).append("\n"); // on déchiffre le mot de passe au passage
         }
         if (!data.toString().equals(""))
@@ -130,10 +130,10 @@ public class JsonController {
             return "No such entry";
     }
 
-    public String getPasswordDataFromKey(String name, String key, EncryptionController encryptionController){
+    public String getPasswordDataFromKey(String name, String key, EncryptionService encryptionService){
         // on récupère le mot de passe depuis la clé
         List<Integer> idList = getIdFromKey(name, key);
-        return encryptionController.decrypt(this.jsonArray.getJSONObject(idList.get(0) - 1).getString("password"));
+        return encryptionService.decrypt(this.jsonArray.getJSONObject(idList.get(0) - 1).getString("password"));
     }
 
     public List<Integer> getIdFromKey(String name, String key){

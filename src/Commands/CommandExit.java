@@ -1,22 +1,22 @@
 package Commands;
 
-import Controllers.FilesController;
-import Controllers.JsonController;
+import Serices.FilesService;
+import Serices.JsonService;
 
 public class CommandExit extends Command{
-    private final FilesController fileController;
-    private final JsonController jsonController;
+    private final FilesService fileController;
+    private final JsonService jsonService;
 
 
-    public CommandExit(FilesController fileController, JsonController jsonController){
+    public CommandExit(FilesService fileController, JsonService jsonService){
         this.name = "exit";
         this.desc = "command to quit the program";
         this.fileController = fileController;
-        this.jsonController = jsonController;
+        this.jsonService = jsonService;
     }
     @Override
     public boolean exec() {
-        this.fileController.writeInFile(this.jsonController.getStringFromJsonObject());
+        this.fileController.writeInFile(this.jsonService.getStringFromJsonObject());
         return true;
     }
 }

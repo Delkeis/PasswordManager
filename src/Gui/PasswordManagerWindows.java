@@ -1,8 +1,8 @@
 package Gui;
 
-import Controllers.EncryptionController;
-import Controllers.FilesController;
-import Controllers.JsonController;
+import Serices.EncryptionService;
+import Serices.FilesService;
+import Serices.JsonService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,13 +18,13 @@ public class PasswordManagerWindows {
     private JButton addButton;
     private boolean result;
 
-    private JsonController jsonController;
-    private EncryptionController encryptionController;
-    private FilesController filesController;
-    public PasswordManagerWindows(JsonController jsonController, EncryptionController encryptionController, FilesController filesController){
-        this.jsonController = jsonController;
-        this.encryptionController = encryptionController;
-        this.filesController = filesController;
+    private final JsonService jsonService;
+    private final EncryptionService encryptionService;
+    private final FilesService filesService;
+    public PasswordManagerWindows(JsonService jsonService, EncryptionService encryptionService, FilesService filesService){
+        this.jsonService = jsonService;
+        this.encryptionService = encryptionService;
+        this.filesService = filesService;
 
         this.infoPanel.setLayout(new BoxLayout(this.infoPanel, BoxLayout.Y_AXIS));
         this.infoPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -40,7 +40,7 @@ public class PasswordManagerWindows {
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
 
-        for (String[] entry: this.jsonController.getAllEntryFromData()){
+        for (String[] entry: this.jsonService.getAllEntryFromData()){
             JPanel entrypane = new JPanel();
 
             entrypane.setLayout(new BoxLayout(entrypane, BoxLayout.Y_AXIS));
@@ -105,7 +105,7 @@ public class PasswordManagerWindows {
         contentPanel.add(new JLabel("Site : "+content[4]), gbc);
         contentPanel.add(new JLabel("User Name : "+content[2]), gbc);
         contentPanel.add(new JLabel("Name : "+content[1]), gbc);
-        contentPanel.add(new JLabel("Password : "+this.encryptionController.decrypt(content[3])), gbc);
+        contentPanel.add(new JLabel("Password : "+this.encryptionService.decrypt(content[3])), gbc);
         contentPanel.add(delButton);
 
         contentPanel.setVisible(true);
@@ -117,12 +117,12 @@ public class PasswordManagerWindows {
         this.infoPanel.repaint();
     }
     private void deleteEntry(String[] content){
-        this.jsonController.removeDataFromJsonBuffer(Integer.parseInt(content[0]));
-        this.filesController.writeInFile(this.jsonController.getStringFromJsonObject());
+        this.jsonService.removeDataFromJsonBuffer(Integer.parseInt(content[0]));
+        this.filesService.writeInFile(this.jsonService.getStringFromJsonObject());
     }
     private void createInfoPanel(){
         System.out.println("Appel dé l'écran de création !");
-        EntryCreatorWindow newEntryWindow = new EntryCreatorWindow(this.jsonController, this.filesController, this.encryptionController);
+        EntryCreatorWindow newEntryWindow = new EntryCreatorWindow(this.jsonService, this.filesService, this.encryptionService);
         JFrame frame = new JFrame();
         frame.setContentPane(newEntryWindow.getPanel1());
         frame.pack();

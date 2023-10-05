@@ -1,15 +1,15 @@
 package Commands;
 
-import Controllers.JsonController;
+import Serices.JsonService;
 
 public class CommandList extends Command {
     // Commande pour afficher le contenue de la JsonArray
     // TODO : la commande est la pour le dévelopement et est vouée à disparaître
 
-    private final JsonController jsonController;
-    public CommandList(JsonController jsonController){
+    private final JsonService jsonService;
+    public CommandList(JsonService jsonService){
         super();
-        this.jsonController = jsonController;
+        this.jsonService = jsonService;
         this.name = "list";
         this.desc = "command for listing all entries";
     }
@@ -17,7 +17,7 @@ public class CommandList extends Command {
     @Override
     public boolean exec() {
         System.out.println("exec : " + this.name);
-        System.out.println(jsonController.getStringFromJsonObject());
+        System.out.println(jsonService.getStringFromJsonObject());
         return true;
     }
 }

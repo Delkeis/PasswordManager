@@ -1,21 +1,21 @@
 package Commands;
 
-import Controllers.EncryptionController;
-import Controllers.JsonController;
+import Serices.EncryptionService;
+import Serices.JsonService;
 
 import java.util.Scanner;
 
 public class CommandSearch extends Command{
     // Commande pour cherchez de la donnée parmi celles présentes dans la JsonArray
-    private final JsonController jsonController;
+    private final JsonService jsonService;
     private final Scanner userCommandScanner;
-    private final EncryptionController encryptionController;
+    private final EncryptionService encryptionService;
 
-    public CommandSearch(Scanner userCommandScanner, JsonController jsonController, EncryptionController encryptionController){
+    public CommandSearch(Scanner userCommandScanner, JsonService jsonService, EncryptionService encryptionService){
         super();
-        this.jsonController = jsonController;
+        this.jsonService = jsonService;
         this.userCommandScanner = userCommandScanner;
-        this.encryptionController = encryptionController;
+        this.encryptionService = encryptionService;
         this.name = "search";
         this.desc = "command for searching an entry with name / user name / site";
     }
@@ -30,17 +30,17 @@ public class CommandSearch extends Command{
         switch (this.userCommandScanner.nextLine().trim().toLowerCase()) {
             case "name":
                 System.out.print("the name : ");
-                System.out.println(jsonController.getDataFromKey(this.userCommandScanner.nextLine().trim().toLowerCase(), "name", encryptionController));
+                System.out.println(jsonService.getDataFromKey(this.userCommandScanner.nextLine().trim().toLowerCase(), "name", encryptionService));
                 break;
             case "username":
             case "user name":
             case "user_name":
                 System.out.print("the user name : ");
-                System.out.println(jsonController.getDataFromKey(this.userCommandScanner.nextLine().trim().toLowerCase(), "user_name", encryptionController));
+                System.out.println(jsonService.getDataFromKey(this.userCommandScanner.nextLine().trim().toLowerCase(), "user_name", encryptionService));
                 break;
             case "site":
                 System.out.print("the site : ");
-                System.out.println(jsonController.getDataFromKey(this.userCommandScanner.nextLine().trim().toLowerCase(), "site", encryptionController));
+                System.out.println(jsonService.getDataFromKey(this.userCommandScanner.nextLine().trim().toLowerCase(), "site", encryptionService));
                 break;
             case "back":
                 return true;

@@ -1,22 +1,22 @@
 package Commands;
 
-import Controllers.EncryptionController;
-import Controllers.JsonController;
+import Serices.EncryptionService;
+import Serices.JsonService;
 
 import java.util.Scanner;
 
 public class CommandAddEntry extends Command {
     // la classe permet d'ajouter une entrée dans la JsonArray
 
-    private final JsonController jsonController;
+    private final JsonService jsonService;
     private final Scanner userCommandScanner;
-    private final EncryptionController encryptionController;
+    private final EncryptionService encryptionService;
 
-    public CommandAddEntry(JsonController jsonController, Scanner userCommandScanner, EncryptionController encryptionController){
+    public CommandAddEntry(JsonService jsonService, Scanner userCommandScanner, EncryptionService encryptionService){
         super();
-        this.jsonController = jsonController;
+        this.jsonService = jsonService;
         this.userCommandScanner = userCommandScanner;
-        this.encryptionController = encryptionController;
+        this.encryptionService = encryptionService;
         this.name = "add entry";
         this.desc = "command that permit to add an entry with name / site / password";
     }
@@ -33,9 +33,9 @@ public class CommandAddEntry extends Command {
         System.out.print("password = ");
         String tmpPassword = this.userCommandScanner.nextLine();
         // on chiffre le mot de passe.
-        tmpPassword = this.encryptionController.encrypt(tmpPassword);
+        tmpPassword = this.encryptionService.encrypt(tmpPassword);
         // on enregistre l'entrée dans la JsonArray
-        this.jsonController.addDatasInJsonBuffer(tmpName, tmpSite, tmpUserName, tmpPassword);
+        this.jsonService.addDatasInJsonBuffer(tmpName, tmpSite, tmpUserName, tmpPassword);
         return true;
     }
 }

@@ -1,8 +1,8 @@
 package Gui;
 
-import Controllers.EncryptionController;
-import Controllers.FilesController;
-import Controllers.JsonController;
+import Serices.EncryptionService;
+import Serices.FilesService;
+import Serices.JsonService;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -18,9 +18,9 @@ public class EntryCreatorWindow extends JFrame{
     private JButton cancelButton;
 
     /// variables techniques personnels
-    private FilesController filesController;
-    private JsonController jsonController;
-    private EncryptionController encryptionController;
+    private FilesService filesService;
+    private JsonService jsonService;
+    private EncryptionService encryptionService;
 
     public JButton getCancelButton(){
         return this.cancelButton;
@@ -30,10 +30,10 @@ public class EntryCreatorWindow extends JFrame{
         return this.panel1;
     }
 
-    public EntryCreatorWindow(JsonController jsonController, FilesController filesController, EncryptionController encryptionController){
-        this.jsonController = jsonController;
-        this.filesController = filesController;
-        this.encryptionController = encryptionController;
+    public EntryCreatorWindow(JsonService jsonService, FilesService filesService, EncryptionService encryptionService){
+        this.jsonService = jsonService;
+        this.filesService = filesService;
+        this.encryptionService = encryptionService;
 
         this.validateButton.addActionListener(new ActionListener() {
             @Override
@@ -46,12 +46,12 @@ public class EntryCreatorWindow extends JFrame{
         if (this.nameField != null && this.userNameField != null &&
             this.webSiteField != null && this.passwordField != null){
 
-            this.jsonController.addDatasInJsonBuffer(this.nameField.getText().toString(),
+            this.jsonService.addDatasInJsonBuffer(this.nameField.getText().toString(),
                     this.webSiteField.getText().toString(),
                     this.userNameField.getText().toString(),
-                    this.encryptionController.encrypt(new String(this.passwordField.getPassword())));
+                    this.encryptionService.encrypt(new String(this.passwordField.getPassword())));
 
-            this.filesController.writeInFile(this.jsonController.getStringFromJsonObject());
+            this.filesService.writeInFile(this.jsonService.getStringFromJsonObject());
         }
     }
 }

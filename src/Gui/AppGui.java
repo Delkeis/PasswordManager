@@ -1,12 +1,11 @@
 package Gui;
 
-import Controllers.EncryptionController;
-import Controllers.FilesController;
-import Controllers.JsonController;
+import Serices.EncryptionService;
+import Serices.FilesService;
+import Serices.JsonService;
 import Exceptions.EmptyFileException;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 
@@ -19,23 +18,23 @@ public class AppGui {
     private JButton button2;
 
     /// variable techniques personnels
-    private FilesController fileController;
-    private EncryptionController encryptionController;
-    private JsonController jsonController;
+    private FilesService fileController;
+    private EncryptionService encryptionService;
+    private JsonService jsonService;
 
     volatile private boolean isLogged;
 
 
-    public AppGui(FilesController fileController, EncryptionController encryptionController,
-                  JsonController jsonController) {
+    public AppGui(FilesService fileController, EncryptionService encryptionService,
+                  JsonService jsonService) {
         this.fileController = fileController;
-        this.jsonController = jsonController;
-        this.encryptionController = encryptionController;
+        this.jsonService = jsonService;
+        this.encryptionService = encryptionService;
         this.isLogged = false;
         this.panel1.setSize(800, 600);
 
         try {
-            this.jsonController.getContentFromString(this.fileController.getFileContent());
+            this.jsonService.getContentFromString(this.fileController.getFileContent());
         } catch (EmptyFileException e) {
             e.printStackTrace();
         }
@@ -51,9 +50,9 @@ public class AppGui {
 
 
     public AppGui() {
-        this.fileController = new FilesController("./data.json");
-        this.jsonController = new JsonController();
-        new AppGui(this.fileController, this.encryptionController, this.jsonController);
+        this.fileController = new FilesService("./data.json");
+        this.jsonService = new JsonService();
+        new AppGui(this.fileController, this.encryptionService, this.jsonService);
     }
 
     public JPanel getPanel1() {
@@ -65,14 +64,14 @@ public class AppGui {
     }
 
     private void checkPassword(){
-        this.encryptionController.setMasterPassword(new String(this.passwordField1.getPassword()));
-        checkPassword(this.encryptionController);
+        this.encryptionService.setMasterPassword(new String(this.passwordField1.getPassword()));
+        checkPassword(this.encryptionService);
     }
-    private void checkPassword(EncryptionController encryptionController){
-        this.encryptionController = encryptionController;
+    private void checkPassword(EncryptionService encryptionService){
+        this.encryptionService = encryptionService;
         System.out.println();
 
-        if (this.jsonController.getPasswordDataFromKey("MyPasswordManager", "name", this.encryptionController).equals("azerty")) {
+        if (this.jsonService.getPasswordDataFromKey("MyPasswordManager", "name", this.encryptionService).equals("azerty")) {
             System.out.println("logged in !");
             this.isLogged = true;
         }
